@@ -16,4 +16,4 @@
 .DS_Store
 Thumbs.db
 
-
+docker/db_data/

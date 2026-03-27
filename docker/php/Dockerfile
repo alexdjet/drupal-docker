@@ -1,11 +1,11 @@
-FROM php:8.2-fpm
-
-RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libfreetype6-dev \
-    libzip-dev libicu-dev libpq-dev libmemcached-dev \
-    unzip git zlib1g-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip pdo pdo_mysql intl opcache
+FROM php:8.3-fpm-alpine
+RUN apk add --no-cache --virtual .build-deps \
+    $PHPIZE_DEPS libpng-dev libjpeg-turbo-dev freetype-dev \
+    libzip-dev icu-dev \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && docker-php-ext-install -j1 gd zip pdo_mysql intl opcache \
+  && apk del .build-deps \
+  && rm -rf /tmp/*
 
 RUN pecl install memcached && docker-php-ext-enable memcached
 

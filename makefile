@@ -11,11 +11,19 @@ down:
 
 # Установка Drupal с нуля (использовать один раз)
 install:
+	# Если composer.json нет, скачиваем во временную папку и переносим
+	docker-compose exec php sh -c 'if [ ! -f composer.json ]; then \
+		composer create-project drupal/recommended-project temp --no-interaction && \
+		cp -rn temp/. . && rm -rf temp; \
+	fi'
 	docker-compose exec php composer install
+	# Установка БД через Drush
 	docker-compose exec php drush site:install standard \
 		--db-url=mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@db/$(MYSQL_DATABASE) \
 		--account-name=admin --account-pass=admin -y
+	# Права доступа
 	docker-compose exec php chown -R www-data:www-data web/sites/default/files
+
 
 # Очистка кэша Drupal
 cr:

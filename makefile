@@ -12,21 +12,17 @@ down:
 # Установка Drupal с нуля (использовать один раз)
 install:
 	# Если composer.json нет, скачиваем во временную папку и переносим
-	docker-compose exec php sh -c 'if [ ! -f composer.json ]; then \
-		composer create-project drupal/recommended-project temp --no-interaction && \
-		cp -rn temp/. . && rm -rf temp; \
-	fi'
+	docker-compose exec php composer create-project drupal/recommended-project temp_drupal --no-interaction
+	docker-compose exec php sh -c "mv temp_drupal/* temp_drupal/.* . 2>/dev/null || true"
 	docker-compose exec php composer install
 
 	# Устанавливаем Drush прямо в проект (локально, не глобально)
-	docker-compose exec php sh -c 'cd /var/www/html && \
-		composer require drush/drush:^12'
+	docker-compose exec php composer require drush/drush
 	# Обновляем зависимости, чтобы убедиться, что всё в vendor
-	docker-compose exec php sh -c 'cd /var/www/html && composer install'
-
+	docker-compose exec php composer install
 
 	# Установка БД через Drush
-	docker-compose exec php drush site:install standard \
+	docker-compose exec php ./vendor/bin/drush site:install standard \
 		--db-url=mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@db/$(MYSQL_DATABASE) \
 		--account-name=admin --account-pass=admin -y
 	# Права доступа

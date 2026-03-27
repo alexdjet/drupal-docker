@@ -17,6 +17,14 @@ install:
 		cp -rn temp/. . && rm -rf temp; \
 	fi'
 	docker-compose exec php composer install
+
+	# Устанавливаем Drush прямо в проект (локально, не глобально)
+	docker-compose exec php sh -c 'cd /var/www/html && \
+		composer require drush/drush:^12'
+	# Обновляем зависимости, чтобы убедиться, что всё в vendor
+	docker-compose exec php sh -c 'cd /var/www/html && composer install'
+
+
 	# Установка БД через Drush
 	docker-compose exec php drush site:install standard \
 		--db-url=mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@db/$(MYSQL_DATABASE) \

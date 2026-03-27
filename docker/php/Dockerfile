@@ -21,8 +21,7 @@ RUN pecl install memcached && docker-php-ext-enable memcached
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN composer global require drush/drush && \
-    ln -s /root/.composer/vendor/bin/drush /usr/local/bin/drush
+#RUN composer global require drush/drush && ln -s /root/.composer/vendor/bin/drush /usr/local/bin/drush
 
 WORKDIR /var/www/html
 

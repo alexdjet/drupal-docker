@@ -24,7 +24,7 @@ install:
 	# Установка БД через Drush
 	docker-compose exec php ./vendor/bin/drush site:install standard \
 		--db-url=mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@db/$(MYSQL_DATABASE) \
-		--account-name=admin --account-pass=admin -y
+		--account-name=$(ACCOUNT_NAME) --account-pass=$(ACCOUNT_PASS) -y
 	# Права доступа
 	docker-compose exec php chown -R www-data:www-data web/sites/default/files
 

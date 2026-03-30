@@ -41,7 +41,6 @@ services:
 
   memcached:
     image: memcached:alpine
-    container_name: drupal_memcached
     ports:
       - "11211:11211"
 

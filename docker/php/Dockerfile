@@ -1,4 +1,10 @@
-FROM php:8.3-fpm-alpine
+#FROM php:8.3-fpm-alpine
+
+FROM php:8.3-fpm-alpine3.23
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.23/main" > /etc/apk/repositories \
+    && echo "http://dl-cdn.alpinelinux.org/alpine/v3.23/community" >> /etc/apk/repositories \
+    && apk update
+
 
 RUN apk add --no-cache \
     libpng-dev \
